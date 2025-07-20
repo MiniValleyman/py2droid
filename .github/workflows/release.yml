@@ -1,4 +1,4 @@
-name: Build and Release
+name: Compile
 
 on:
   workflow_dispatch:
@@ -25,9 +25,10 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ github.ref_name }}
           files: dist/*
+          name: Release ${{ github.ref_name }}
           body: |
-            ## 🤖 Automated Release
+            Released by: ${{ github.actor }}
+            Triggered from: ${{ github.event_name }}
 
-            This is an automated release.
-            For a complete list of changes, see [CHANGELOG.md](module/CHANGELOG.md).
