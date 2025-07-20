@@ -6,13 +6,13 @@ A Magisk module to install Python 3 on Android, including the standard library (
 
 ## Installation
 
-1. Download the latest ZIP for your device's architecture from the [Releases](https://github.com/Mrakorez/py2droid/releases/latest) page.
+1. Download the latest ZIP for your device's architecture from the [Releases](https://github.com/MiniValleyman/py2droid/releases/latest) page.
 2. Open **Magisk Manager** and navigate to **Modules**.
 3. Tap **Install from storage** and choose the downloaded ZIP file.
 4. Wait for the installation to complete.
 5. Reboot your device.
 
-## Migration from [PyDroid](https://github.com/Mrakorez/pydroid)
+## Migration from [PyDroid](https://github.com/MiniValleyman/pydroid)
 
 Migration is handled automatically by the module's installation script.
 All your data will be transferred to the new installation location without any manual intervention.
