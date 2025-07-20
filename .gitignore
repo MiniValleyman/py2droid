@@ -1,0 +1,9 @@
+# Build artifacts
+dist/
+build/
+
+# Python virtual environment for scripts
+scripts/.venv/
+scripts/venv/
+.venv/
+venv/

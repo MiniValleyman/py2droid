@@ -1,0 +1,129 @@
+#!/system/bin/python3
+
+"""Script to manage binary wrappers for the Py2Droid module.
+
+Creates and removes shell wrappers for binaries in the Py2Droid environment,
+ensuring the correct binaries are available in the module's bin directory.
+"""
+
+import logging
+import sys
+from argparse import ArgumentParser
+from os import environ
+from pathlib import Path
+
+__author__ = "Mrakorez"
+__license__ = "MIT"
+__version__ = "0.1.0"
+
+SCRIPT_NAME = Path(__file__).name
+
+HOME = environ["HOME"]
+PATH = environ["PATH"]
+
+MODULE_BIN = Path("/data/adb/modules/py2droid/system/bin")
+MODULE_UPDATE_BIN = Path("/data/adb/modules_update/py2droid/system/bin")
+
+# Permissions for the wrapper scripts
+PERMISSIONS_MODE = 0o755
+
+
+WRAPPER_TEMPLATE = f"""
+#!/system/bin/sh
+
+. {HOME}/env.sh
+
+exec {{}} "$@"
+""".strip()
+
+
+log = logging.getLogger(__name__)
+
+
+def create_wrapper(path: Path) -> None:
+    """Create a shell wrapper script at the specified path.
+
+    Args:
+        path: The file path where the wrapper script will be created.
+
+    """
+    with path.open("w", encoding="utf-8") as fout:
+        fout.write(WRAPPER_TEMPLATE.format(path.name))
+
+    path.chmod(PERMISSIONS_MODE)
+
+    log.info("Created: %s", path.name)
+
+
+def remove_wrapper(path: Path) -> None:
+    """Remove the specified wrapper script file.
+
+    Args:
+        path: The file path of the wrapper script to remove.
+
+    """
+    path.unlink()
+    log.info("Removed: %s", path.name)
+
+
+def main() -> None:
+    """Synchronize shell wrappers for binaries in the Py2Droid environment.
+
+    Scans the Py2Droid binary directories and ensures that shell wrappers are created or
+    removed in the module's bin directory to match the available binaries.
+    """
+    parser = ArgumentParser()
+
+    parser.add_argument(
+        "-v",
+        "--version",
+        action="version",
+        version=f"%(prog)s {__version__} by {__author__} ({__license__})",
+    )
+    parser.parse_args()
+
+    if MODULE_UPDATE_BIN.is_dir():
+        bindir = MODULE_UPDATE_BIN
+    elif MODULE_BIN.is_dir():
+        bindir = MODULE_BIN
+    else:
+        sys.exit("Failed to find the module's installation directory.")
+
+    existing_wrappers = {file.name: file for file in bindir.iterdir() if file.is_file()}
+
+    if existing_wrappers.get(SCRIPT_NAME) is not None:
+        del existing_wrappers[SCRIPT_NAME]
+
+    py2droid_path_entries = (Path(entry) for entry in PATH.split(":") if HOME in entry)
+
+    available_binaries: set[str] = set()
+
+    for entry in py2droid_path_entries:
+        available_binaries.update(
+            file.name for file in entry.iterdir() if file.is_file()
+        )
+
+    changes_made = False
+
+    for name in available_binaries:
+        if name not in existing_wrappers:
+            create_wrapper(bindir / name)
+            changes_made = True
+
+    for name, path in existing_wrappers.items():
+        if name not in available_binaries:
+            remove_wrapper(path)
+            changes_made = True
+
+    if changes_made:
+        log.warning("All changes will take effect after the next reboot.")
+
+
+if __name__ == "__main__":
+    logging.basicConfig(
+        datefmt="%H:%M:%S",
+        format="[%(levelname).1s | %(asctime)s] %(message)s",
+        level=logging.INFO,
+    )
+
+    main()

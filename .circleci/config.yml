@@ -1,0 +1,39 @@
+version: 2.1
+
+orbs:
+  python: circleci/python@2
+
+jobs:
+  test-python:
+    docker:
+      - image: cimg/python:3.8-node
+    working_directory: ~/project/scripts
+    steps:
+      - checkout:
+          path: ~/project
+      - python/install-packages
+      - run:
+          name: Run tests
+          command: pytest --junitxml=junit.xml || ((($? == 5)) && echo 'Did not find any tests to run.')
+      - store_test_results:
+          path: junit.xml
+
+  deploy:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run:
+          name: deploy
+          command: '# e.g. ./deploy.sh'
+      - run:
+          name: found github actions config
+          command: ':'
+
+workflows:
+  build-and-test:
+    jobs:
+      - test-python
+      # Uncomment when ready for deployment
+      # - deploy:
+      #     requires:
+      #       - test-python

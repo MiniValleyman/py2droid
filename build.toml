@@ -1,0 +1,60 @@
+# CPython build configuration
+[python]
+# URL to Python source archive (must be .tar.gz)
+sources_url = "https://github.com/python/cpython/archive/refs/tags/v3.13.5.tar.gz"
+
+# Whether to apply patches from 'patches/' directory to source code
+apply_patches = true
+
+# Whether to create distributable packages after build
+package = false
+
+# Target Android architectures to build for
+hosts = [
+    "aarch64-linux-android",
+    "arm-linux-androideabi",
+    "x86_64-linux-android",
+    "i686-linux-android",
+]
+
+# Additional configure script arguments
+configure_args = ["--disable-test-modules"]
+
+# Environment variables for configure script
+[python.configure_env]
+
+
+# Magisk module configuration
+# This section defines how the Python build will be modified and packaged as a Magisk module
+[module]
+# Additional files to include in module distribution
+include_files = ["LICENSE", "README.md"]
+
+# Whether to remove unnecessary files from builds
+debloat = true
+
+# Files and directories to remove from builds
+# Patterns are applied relative to the 'prefix/' directory
+debloat_patterns = [
+    "man",                                                      # Documentation files
+    "share",                                                    # Shared resources
+    "lib/pkgconfig",                                            # pkg-config files
+    "bin/!(py*)",                                               # Non-Python binaries
+    "lib/python3.*/{idlelib*,tkinter*,turtle*,**/__pycache__}", # Graphical libraries and caches
+]
+
+# Whether to strip debug symbols from binaries
+strip = true
+
+# Arguments passed to llvm-strip
+strip_args = ["-s"]
+
+# Whether to update shebangs in executable scripts
+replace_shebangs = true
+
+# Regular expressions for matching and replacing shebangs
+# 'shell' will be replaced with '#!/system/bin/sh'
+# 'python' will be replaced with '#!/system/bin/python3'
+[module.shebang_mapping]
+shell = '(?m)^#!\s*/(?:usr/(?:local/)?|)(?:bin|sbin)/(?:env\s+)?(?:sh|bash|dash)\b'
+python = '(?m)^#!\s*/(?:usr/(?:local/)?|)(?:bin|sbin)/(?:env\s+)?python[0-9]*(?:\.[0-9]+)*\b'
