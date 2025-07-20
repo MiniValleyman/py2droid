@@ -12,7 +12,7 @@ package = false
 # Target Android architectures to build for
 hosts = [
     "aarch64-linux-android",
-    "armv7a-linux-androideabi22",
+    "armv7a-linux-androideabi",
 ]
 
 # Additional configure script arguments
