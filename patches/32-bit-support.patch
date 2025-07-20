@@ -10,8 +10,6 @@ index 551168f..a7da68b 100755
 +HOSTS = [
 +    "aarch64-linux-android",
 +    "arm-linux-androideabi",
-+    "x86_64-linux-android",
-+    "i686-linux-android",
 +]
  APP_ID = "org.python.testbed"
  DECODE_ARGS = ("UTF-8", "backslashreplace")

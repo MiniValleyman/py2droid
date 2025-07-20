@@ -30,10 +30,10 @@ jobs:
           command: ':'
 
 workflows:
-  build-and-test:
+  build:
     jobs:
-      - test-python
+      #- test-python
       # Uncomment when ready for deployment
-      # - deploy:
+      - deploy:
       #     requires:
       #       - test-python

@@ -21,7 +21,7 @@ from zipfile import ZIP_DEFLATED, ZipFile
 from wcmatch.pathlib import GL, B, E, N, Path
 
 __version__ = "0.1.0"
-__author__ = "Mrakorez"
+__author__ = "PhateValleyman <Jonas.Ned@outlook.com>"
 __license__ = "MIT"
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -99,8 +99,6 @@ class ModuleBuilder:
             "aarch64-linux-android": "arm64",
             "armv7a-linux-androideabi": "arm",
             "arm-linux-androideabi": "arm",
-            "x86_64-linux-android": "x64",
-            "i686-linux-android": "x86",
         }
 
     def _create_python_archive(self, prefix: Path) -> BytesIO:

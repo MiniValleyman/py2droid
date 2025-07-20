@@ -12,7 +12,7 @@ from argparse import ArgumentParser
 from os import environ
 from pathlib import Path
 
-__author__ = "Mrakorez"
+__author__ = "PhateValleyman <Jonas.Ned@outlook.com>"
 __license__ = "MIT"
 __version__ = "0.1.0"
 

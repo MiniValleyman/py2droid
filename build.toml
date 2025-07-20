@@ -13,8 +13,6 @@ package = false
 hosts = [
     "aarch64-linux-android",
     "arm-linux-androideabi",
-    "x86_64-linux-android",
-    "i686-linux-android",
 ]
 
 # Additional configure script arguments
@@ -28,7 +26,7 @@ configure_args = ["--disable-test-modules"]
 # This section defines how the Python build will be modified and packaged as a Magisk module
 [module]
 # Additional files to include in module distribution
-include_files = ["LICENSE", "README.md"]
+include_files = ["README.md"]
 
 # Whether to remove unnecessary files from builds
 debloat = true
